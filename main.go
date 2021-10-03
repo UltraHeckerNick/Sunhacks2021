@@ -43,7 +43,7 @@ func main() {
 	var parknameAdj = strings.ReplaceAll(parkname," ","%20")
 	//prompts user for park name
 
-	urlEmpty := "https://maps.googleapis.com/maps/api/place/findplacefromtext/xml?input=[]&inputtype=textquery&fields=geometry(location)&key=AIzaSyBSO3AFRp3vYszi76i3usuHmz4DsUnBnrM"
+	urlEmpty := "https://maps.googleapis.com/maps/api/place/findplacefromtext/xml?input=[]&inputtype=textquery&fields=geometry(location)&key=[]"
 	url := strings.ReplaceAll(urlEmpty,"[]",parknameAdj)
 	method := "GET"
 
