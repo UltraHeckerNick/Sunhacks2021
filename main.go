@@ -43,7 +43,7 @@ func main() {
 	var parknameAdj = strings.ReplaceAll(parkname," ","%20")
 	//prompts user for park name
 
-	urlEmpty := "https://maps.googleapis.com/maps/api/place/findplacefromtext/xml?input=[]&inputtype=textquery&fields=geometry(location)&key=[]"
+	urlEmpty := "https://maps.googleapis.com/maps/api/place/findplacefromtext/xml?input=[]&inputtype=textquery&fields=geometry(location)&key=AIzaSyBSO3AFRp3vYszi76i3usuHmz4DsUnBnrM"
 	url := strings.ReplaceAll(urlEmpty,"[]",parknameAdj)
 	method := "GET"
 
@@ -70,12 +70,33 @@ func main() {
 	var LatLong = Response{}
 	xml.Unmarshal(body, &LatLong)
 
-	fmt.Println(string(body))
-	lati := strconv.FormatFloat(LatLong.Candidates.Geometry.Location.Latitude,'E',-1,64)
-	long :=  strconv.FormatFloat(LatLong.Candidates.Geometry.Location.Longitude,'E',-1,64)
+	lati := strconv.FormatFloat(LatLong.Candidates.Geometry.Location.Latitude,'f',-1,64)
+	long :=  strconv.FormatFloat(LatLong.Candidates.Geometry.Location.Longitude,'f',-1,64)
 	fmt.Println(lati)
+	fmt.Println(long)
 
 	weatherUrlEmpty := "https://api.weather.gov/points/{lat},{lon}"
 	weatherUrl := strings.ReplaceAll(weatherUrlEmpty,"{lat}",lati)
-	weatherUrl = strings.ReplaceAll(weatherUrlEmpty,"{lat}",long)
+	weatherUrl = strings.ReplaceAll(weatherUrl,"{lon}",long)
+
+	client2 := &http.Client{}
+	req2, err := http.NewRequest(method,weatherUrl,nil)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	res2, err := client2.Do(req2)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer res2.Body.Close()
+
+	body2, err := ioutil.ReadAll(res2.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(body2))
 }
